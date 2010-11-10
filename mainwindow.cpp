@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow),
         currentNote(0),
-        factory(new NoteFactory()),
+        noteDAO(Application::getApplication()->getNoteDAO()),
         notes()
 {
     ui->setupUi(this);
@@ -52,12 +52,11 @@ void MainWindow::createMenu() {
     menuFiles->addAction(new OpenDatabaseAction(this));
 
     QMenu * menuTools = this->menuBar()->addMenu(tr("Tools"));
-    menuTools ->addAction(new IndexAllAction(this));
+    menuTools ->addAction(new IndexAllAction(noteDAO, this));
 }
 
 MainWindow::~MainWindow(){
     delete ui;
-    delete factory;
     delete distributor;
 }
 
@@ -98,9 +97,9 @@ void MainWindow::s_updateSearch() {
 
 NoteDistributor * MainWindow::getDistributor(QString searchedText) {
     if (searchedText.trimmed().isEmpty()) {
-        return StandardNoteDistributor::createDistributor();
+        return noteDAO->getNoteDistributor();
     } else {
-        return SearchNoteDistributor::createDistributor(searchedText.trimmed());
+        return noteDAO->getNoteDistributor((searchedText.trimmed()));
     }
 }
 
@@ -112,7 +111,7 @@ void MainWindow::s_refreshNote() {
 }
 
 void MainWindow::s_createNote() {
-    NoteGUI * note = new NoteGUI(factory->createNote(), this);
+    NoteGUI * note = new NoteGUI(noteDAO->create(), this);
 
     note->setMode(NoteGUI::EDIT);
     addNote(note);
@@ -201,7 +200,7 @@ void MainWindow::closeTabIfNotEditMode(int i) {
 }
 
 void MainWindow::createEmptyNote() {
-    NoteGUI * note = new NoteGUI(factory->createNote(), this);
+    NoteGUI * note = new NoteGUI(noteDAO->create(), this);
 
     note->setMode(NoteGUI::DISPLAY);
 

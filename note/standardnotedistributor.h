@@ -4,29 +4,27 @@
 #include <QSqlQueryModel>
 #include <QSqlDatabase>
 
+#include "application.h"
 #include "notedistributor.h"
-#include "notefactory.h"
+#include "notedao.h"
 
 class StandardNoteDistributor : public NoteDistributor
 {
 public:
+    StandardNoteDistributor(NoteDAO * noteDAO = Application::getApplication()->getNoteDAO(), QSqlDatabase db = QSqlDatabase::database("noterex"));
     virtual ~StandardNoteDistributor();
 
     virtual int count() const;
-    virtual NoteDB * getNoteFromRow(int row);
+    virtual Note * getNoteFromRow(int row);
 
     virtual void refresh();
-
-    static NoteDistributor * createDistributor(QSqlDatabase db = QSqlDatabase::database("noterex"));
-
-protected:
-    StandardNoteDistributor(QSqlDatabase db = QSqlDatabase::database("noterex"));
 
 private:
     QSqlDatabase database;
     QSqlQueryModel * model;
-    NoteFactory factory;
     int numberOfRows;
+    NoteDAO * noteDAO;
+
 };
 
 #endif // STANDARDNOTEDISTRIBUTOR_H

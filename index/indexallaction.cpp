@@ -4,9 +4,9 @@
 #include "note/standardnotedistributor.h"
 #include "note/noteindexor.h"
 
-IndexAllAction::IndexAllAction(QObject *parent) :
+IndexAllAction::IndexAllAction(NoteDAO * noteDAO, QObject *parent) :
     QAction(tr("Index all"), parent),
-    distributor(StandardNoteDistributor::createDistributor())
+    distributor(noteDAO->getNoteDistributor())
 {
     connect(this,SIGNAL(triggered()),this, SLOT(IndexAllDocuments()));
 }

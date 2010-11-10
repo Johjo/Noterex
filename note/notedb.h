@@ -1,31 +1,27 @@
 #ifndef NOTEDB_H
 #define NOTEDB_H
 
-#include <QSqlDatabase>
-
 #include "note.h"
 #include "notedata.h"
-
+#include "notedao.h"
 
 class NoteDB : public Note
 {
 public:
-    NoteDB(QSqlDatabase db = QSqlDatabase::database("noterex"), int id = -1);
-    NoteDB(NoteData * data, QSqlDatabase db, int id);
+    NoteDB(NoteDAO * noteDAO, int id = -1);
+    NoteDB(NoteData * data, NoteDAO * noteDAO, int id);
 
     virtual ~NoteDB();
 
     virtual void save();
     virtual void remove();
 
+
     int getId();
-
-
-protected:
-    virtual bool isExisting();
+    void setId(int id);
 
 private:
-    QSqlDatabase database;
+    NoteDAO * noteDAO;
     int id;
 };
 

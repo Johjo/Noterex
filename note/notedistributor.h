@@ -1,7 +1,9 @@
 #ifndef NOTEDISTRIBUTOR_H
 #define NOTEDISTRIBUTOR_H
 
-#include "notedb.h"
+#include "note.h"
+
+
 
 class NoteDistributor {
 
@@ -10,7 +12,7 @@ public:
     virtual ~NoteDistributor() {}
 
     virtual int count() const = 0;
-    virtual NoteDB * getNoteFromRow(int row) = 0;
+    virtual Note * getNoteFromRow(int row) = 0;
 
     virtual void refresh() = 0;
 };

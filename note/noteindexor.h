@@ -9,7 +9,7 @@
 class NoteIndexor
 {
 public:
-    NoteIndexor(NoteDB * note, QSqlDatabase = QSqlDatabase::database("noterex"));
+    NoteIndexor(Note * note, QSqlDatabase = QSqlDatabase::database("noterex"));
     void index();
     void removeIndex();
 

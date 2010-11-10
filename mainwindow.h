@@ -8,9 +8,8 @@
 #include "model/noteviewmodel.h"
 
 #include "note/notegui.h"
-#include "note/notefactory.h"
 #include "note/notedistributor.h"
-
+#include "note/notedao.h"
 
 namespace Ui {
     class MainWindow;
@@ -42,7 +41,8 @@ private:
     Ui::MainWindow *ui;
     NoteGUI * currentNote;
     QAbstractItemModel * noteModel;
-    NoteFactory * factory;
+
+    NoteDAO * noteDAO;
     NoteDistributor * distributor;
     QList<NoteGUI *> notes;
 

@@ -2,11 +2,18 @@
 #define NOTE_H
 
 #include <QString>
+#include <QSharedData>
 
 #include "notedata.h"
 
-class Note {
+
+
+
+class Note : public QSharedData{
 public:
+
+    typedef QSharedPointer<Note> SharedPointor;
+
     Note(NoteData * data = 0):data(data){}
     virtual ~Note() {delete data;}
 
@@ -21,7 +28,9 @@ public:
     virtual void save() = 0;
     virtual void remove() = 0;
 
-protected:
+    virtual int getId() = 0;
+    virtual void setId(int id) = 0;
+
     NoteData * getData() {return data;}
 
 private:

@@ -5,7 +5,7 @@
 NoteIndexor::NoteIndexor()
 {}
 
-NoteIndexor::NoteIndexor(NoteDB * note, QSqlDatabase database):
+NoteIndexor::NoteIndexor(Note * note, QSqlDatabase database):
         doc("note",note->getId()),
         database(database)
 {

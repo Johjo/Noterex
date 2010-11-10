@@ -7,11 +7,11 @@
 #include "index/standardsearcher.h"
 
 
-SearchNoteDistributor::SearchNoteDistributor(QString searchedText,QSqlDatabase db):
+SearchNoteDistributor::SearchNoteDistributor(QString searchedText, NoteDAO *noteDAO, QSqlDatabase db):
         NoteDistributor(),
         database(db),
-        factory(db),
-        searchedText(searchedText)
+        searchedText(searchedText),
+        noteDAO(noteDAO)
 {
 }
 
@@ -30,12 +30,6 @@ int SearchNoteDistributor::count() const{
 }
 
 
-NoteDB * SearchNoteDistributor::getNoteFromRow(int row) {
-    return factory.getNote(notesId.at(row));
-}
-
-NoteDistributor * SearchNoteDistributor::createDistributor(QString searchedText, QSqlDatabase db) {
-    NoteDistributor * distributor = new SearchNoteDistributor(searchedText, db);
-    distributor->refresh();
-    return distributor;
+Note * SearchNoteDistributor::getNoteFromRow(int row) {
+    return noteDAO->get(notesId.at(row));
 }

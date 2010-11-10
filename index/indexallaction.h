@@ -1,15 +1,17 @@
 #ifndef INDEXALLACTION_H
 #define INDEXALLACTION_H
 
-#include "note/notedistributor.h"
 
 #include <QAction>
+
+#include "note/notedistributor.h"
+#include "note/notedao.h"
 
 class IndexAllAction : public QAction
 {
     Q_OBJECT
 public:
-    explicit IndexAllAction(QObject *parent = 0);
+    IndexAllAction(NoteDAO * noteDAO, QObject *parent = 0);
     virtual ~IndexAllAction();
 
 signals:

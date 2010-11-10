@@ -5,6 +5,9 @@
 
 #include <QSqlDatabase>
 
+#include "note/daofactory.h"
+#include "note/notedao.h"
+
 class Application
 {
 public:
@@ -16,6 +19,9 @@ public:
     int run(int argc, char *argv[]);
     void openDatabase(QString filename);
 
+    DAOFactory * getDAOFactory();
+    NoteDAO * getNoteDAO();
+
 private:
     Application();
     static Application * application;
@@ -25,6 +31,10 @@ private:
 
     void readSettings();
     void openLastDatabaseOrCreateIt();
+
+    DAOFactory * daoFactory;
+
+
 
 };
 

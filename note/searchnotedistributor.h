@@ -6,30 +6,32 @@
 #include <QString>
 #include <QList>
 
-#include "notefactory.h"
+
+#include "application.h"
+#include "notedao.h"
 
 #include "notedistributor.h"
+
 
 class SearchNoteDistributor : public NoteDistributor
 {
 public:
+    SearchNoteDistributor(QString searchedText, NoteDAO * noteDAO = Application::getApplication()->getNoteDAO(), QSqlDatabase db = QSqlDatabase::database("noterex"));
+
     virtual ~SearchNoteDistributor();
 
     virtual int count() const;
-    virtual NoteDB * getNoteFromRow(int row);
+    virtual Note * getNoteFromRow(int row);
 
     virtual void refresh();
 
     static NoteDistributor * createDistributor(QString searchedText, QSqlDatabase db = QSqlDatabase::database("noterex"));
 
-protected:
-    SearchNoteDistributor(QString searchedText, QSqlDatabase db = QSqlDatabase::database("noterex"));
-
 private:
     QSqlDatabase database;
-    NoteFactory factory;
-    QList<int> notesId;
     QString searchedText;
+    NoteDAO * noteDAO;
+    QList<int> notesId;
 
 
 };

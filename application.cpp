@@ -5,6 +5,8 @@
 #include "database/createdatabaseaction.h"
 
 #include "mainwindow.h"
+#include "note/daofactorysql.h"
+
 
 Application * Application::application = NULL;
 
@@ -41,6 +43,8 @@ void Application::openDatabase(QString filename) {
     database.open();
 
     settings.setValue("filename",filename);
+
+    daoFactory = new DAOFactorySql(database);
 }
 
 Application * Application::getApplication() {
@@ -66,4 +70,12 @@ void Application::openLastDatabaseOrCreateIt() {
     } else {
         openDatabase(filename);
     }
+}
+
+DAOFactory* Application::getDAOFactory() {
+    return daoFactory;
+}
+
+NoteDAO* Application::getNoteDAO() {
+    return daoFactory->getNoteDAO();
 }

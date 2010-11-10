@@ -1,13 +1,14 @@
 #include "standardnotedistributor.h"
 
 #include <QSqlRecord>
+#include <QDebug>
 
-StandardNoteDistributor::StandardNoteDistributor(QSqlDatabase db):
+StandardNoteDistributor::StandardNoteDistributor(NoteDAO *noteDAO, QSqlDatabase db):
         NoteDistributor(),
         database(db),
         model(new QSqlQueryModel()),
-        factory(db),
-        numberOfRows(0)
+        numberOfRows(0),
+        noteDAO(noteDAO)
 {
 }
 
@@ -28,12 +29,6 @@ int StandardNoteDistributor::count() const{
     return numberOfRows;
 }
 
-NoteDB * StandardNoteDistributor::getNoteFromRow(int row) {
-    return factory.getNote(model->record(row).value(0).toInt());
-}
-
-NoteDistributor * StandardNoteDistributor::createDistributor(QSqlDatabase db) {
-    NoteDistributor * distributor = new StandardNoteDistributor(db);
-    distributor->refresh();
-    return distributor;
+Note* StandardNoteDistributor::getNoteFromRow(int row) {
+    return noteDAO->get(model->record(row).value(0).toInt());
 }

@@ -28,7 +28,6 @@ SOURCES += main.cpp\
     note/notedata.cpp \
     note/notedb.cpp \
     note/notegui.cpp \
-    note/notefactory.cpp \
     note/noteindexor.cpp \
     note/standardnotedistributor.cpp \
     note/searchnotedistributor.cpp \
@@ -37,7 +36,9 @@ SOURCES += main.cpp\
     database/databasecreator.cpp \
     database/createdatabaseaction.cpp \
     database/opendatabaseaction.cpp \
-    note/tagdata.cpp
+    note/tagdata.cpp \
+    note/daofactorysql.cpp \
+    note/notedaosql.cpp
 
 HEADERS  += mainwindow.h \
     noteedit.h \
@@ -60,7 +61,6 @@ HEADERS  += mainwindow.h \
     note/notedata.h \
     note/notedb.h \
     note/notegui.h \
-    note/notefactory.h \
     note/noteindexor.h \
     note/notedistributor.h \
     note/standardnotedistributor.h \
@@ -71,6 +71,10 @@ HEADERS  += mainwindow.h \
     database/databasecreator.h \
     database/createdatabaseaction.h \
     database/opendatabaseaction.h \
-    note/tagdata.h
+    note/tagdata.h \
+    note/notedao.h \
+    note/daofactory.h \
+    note/daofactorysql.h \
+    note/notedaosql.h
 
 FORMS    += mainwindow.ui

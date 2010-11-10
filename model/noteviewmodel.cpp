@@ -27,7 +27,7 @@ QVariant NoteViewModel::data(const QModelIndex & index, int role) const {
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    NoteDB * note = distributor->getNoteFromRow(index.row());
+    Note * note = distributor->getNoteFromRow(index.row());
 
     return note->getSubject();
 }
