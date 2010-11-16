@@ -5,7 +5,7 @@
 #include <QSharedData>
 
 #include "notedata.h"
-
+#include "tag.h"
 
 
 
@@ -32,6 +32,10 @@ public:
     virtual void setId(int id) = 0;
 
     NoteData * getData() {return data;}
+
+    QList<Tag> getTags() {return data->getTags();}
+    void resetTags(){data->resetTags();}
+    void addTag(Tag tag){data->addTag(tag);}
 
 private:
     NoteData * data;

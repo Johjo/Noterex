@@ -12,6 +12,7 @@
 #include "searchnotedistributor.h"
 
 NoteDAOSql::NoteDAOSql(QSqlDatabase db):
+        NoteDAO(),
         database(db)
 {}
 
@@ -34,11 +35,29 @@ Note * NoteDAOSql::get(int id){
         np->setSubject(query.value(0).toString());
         np->setBody(query.value(1).toString());
         np->setKeywords(query.value(2).toString());
+
+        getTagsForNote(np, id);
         return new NoteDB(np, this,id);
     } else {
         return new NoteDB(this);
     }
 }
+
+void NoteDAOSql::getTagsForNote(NoteData * note, int id) {
+    note->resetTags();
+
+    QSqlQuery query(database);
+    query.exec("select tag_id, tag_state, tag_param from note_tag where note_id = " + QString::number(id));
+    while(query.next()) {
+        QString tagId = query.value(0).toString();
+        int state =  query.value(1).toInt();
+        QString param = query.value(2).toString();
+
+        note->addTag(Tag(tagId,state,param));
+    }
+}
+
+
 
 int NoteDAOSql::insert(Note * note){
     QSqlQuery query(database);
@@ -53,6 +72,11 @@ int NoteDAOSql::insert(Note * note){
     if (query.exec()) {
         note->setId(query.lastInsertId().toInt());
         NoteIndexor(note, database).index();
+
+        saveTagsForNote(data,note->getId());
+
+        emit dataChanged();
+
         return true;
     } else {
         qDebug() << "can't insert note" << query.lastError();
@@ -74,18 +98,53 @@ bool NoteDAOSql::update(Note * note){
 
     if (query.exec()) {
         NoteIndexor(note, database).index();
+        saveTagsForNote(data,note->getId());
+
+        emit dataChanged();
+
         return true;
     } else {
         qDebug() << "can't update note" << query.lastError();
         return false;
     }
 }
+
+void NoteDAOSql::saveTagsForNote(NoteData * noteData, int id) {
+    removeTagsForNote(id);
+    QSqlQuery query(database);
+
+    query.prepare ("INSERT INTO note_tag (note_id, tag_id, tag_state, tag_param) VALUES (:note_id, :tag_id, :tag_state, :tag_param)");
+
+    foreach(Tag tag, noteData->getTags()) {
+        query.bindValue(":note_id", id);
+        query.bindValue(":tag_id", tag.getId());
+        query.bindValue(":tag_state", tag.getState());
+        query.bindValue(":tag_param", tag.getParam());
+        query.exec();
+    }
+}
+
+void NoteDAOSql::removeTagsForNote(int id){
+    QSqlQuery query(database);
+
+    query.prepare ("delete from note_tag where note_id = :note_id");
+    query.bindValue(":note_id", id);
+    query.exec();
+}
+
+
 bool NoteDAOSql::remove(Note * note){
     QSqlQuery query(database);
     query.prepare("DELETE FROM note where note_id = :id");
     query.bindValue(":id", note->getId());
     if (query.exec()) {
         NoteIndexor(note, database).removeIndex();
+
+        removeTagsForNote(note->getId());
+        note->setId(-1);
+
+        emit dataChanged();
+
         return true;
     } else {
         return false;
@@ -113,11 +172,26 @@ bool NoteDAOSql::exist(Note * note){
 NoteDistributor * NoteDAOSql::getNoteDistributor() {
     NoteDistributor * distributor = new StandardNoteDistributor(this,database);
     distributor->refresh();
+
+    connect(this,SIGNAL(dataChanged()),distributor,SLOT(refresh()));
+
     return distributor;
 }
 
 NoteDistributor * NoteDAOSql::getNoteDistributor(QString searchedText) {
     NoteDistributor * distributor = new SearchNoteDistributor(searchedText,this,database);
     distributor->refresh();
+
+    connect(this,SIGNAL(dataChanged()),distributor,SLOT(refresh()));
+
+    return distributor;
+}
+
+NoteDistributor * NoteDAOSql::getNoteDistributor(QList<Tag> tags, QString searchedText) {
+    NoteDistributor * distributor = new SearchNoteDistributor(searchedText,tags,this, database);
+    distributor->refresh();
+
+    connect(this,SIGNAL(dataChanged()),distributor,SLOT(refresh()));
+
     return distributor;
 }

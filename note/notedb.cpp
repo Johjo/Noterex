@@ -1,11 +1,5 @@
 #include "notedb.h"
 
-#include <QSqlQuery>
-#include <QDebug>
-#include <QSqlError>
-
-#include "noteindexor.h"
-
 NoteDB::NoteDB(NoteDAO *noteDAO, int id):
         Note(new NoteData()),
         noteDAO(noteDAO),
@@ -36,3 +30,4 @@ int NoteDB::getId(){
 void NoteDB::setId(int id){
     this->id = id;
 }
+

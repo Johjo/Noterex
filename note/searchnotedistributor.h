@@ -5,18 +5,21 @@
 #include <QSqlQuery>
 #include <QString>
 #include <QList>
-
+#include <QSet>
 
 #include "application.h"
 #include "notedao.h"
 
 #include "notedistributor.h"
+#include "tag.h"
 
 
 class SearchNoteDistributor : public NoteDistributor
 {
 public:
     SearchNoteDistributor(QString searchedText, NoteDAO * noteDAO = Application::getApplication()->getNoteDAO(), QSqlDatabase db = QSqlDatabase::database("noterex"));
+    SearchNoteDistributor(QString searchedText, Tag tag, NoteDAO * noteDAO = Application::getApplication()->getNoteDAO(), QSqlDatabase db = QSqlDatabase::database("noterex"));
+    SearchNoteDistributor(QString searchedText, QList<Tag> tags, NoteDAO * noteDAO = Application::getApplication()->getNoteDAO(), QSqlDatabase db = QSqlDatabase::database("noterex"));
 
     virtual ~SearchNoteDistributor();
 
@@ -32,6 +35,10 @@ private:
     QString searchedText;
     NoteDAO * noteDAO;
     QList<int> notesId;
+    QList<Tag> tags;
+
+    QSet<int> getNotesIdFromTag();
+    QSet<int> getNotesIdFromSearchedText();
 
 
 };

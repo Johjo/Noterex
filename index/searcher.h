@@ -10,7 +10,7 @@ class Searcher
 public:
     Searcher(QString table, QString searchedText):table(table),searchedText(searchedText){}
 
-    virtual QList<int> getAllDocuments() = 0;
+    virtual QSet<int> getAllDocuments() = 0;
 
 protected:
     Searcher() {}

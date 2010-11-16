@@ -235,7 +235,6 @@ void Basket::addNote(QStringList list) {
             content.setRow(i);
             content.setBody(body);
             content.save();
-            qDebug() << i ;
 
             i ++;
         }

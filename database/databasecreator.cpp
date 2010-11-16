@@ -25,7 +25,7 @@ void DatabaseCreator::create() {
     if (database.isOpen()) {
         createNote();
         createIndex();
-        createTagAndFillIt();
+        createTag();
 
         database.close();
     }
@@ -54,28 +54,8 @@ void DatabaseCreator::createIndex() {
     query.exec("CREATE TABLE IF NOT EXISTS index_index (table_id INTEGER, document_id INTEGER, field_id INTEGER, keyword_id INTEGER, index_occurrence INTEGER);");
 }
 
-void DatabaseCreator::createTagAndFillIt() {
-    createTag();
-    fillTag();
-}
 
 void DatabaseCreator::createTag() {
     QSqlQuery query(database);
-    query.exec("CREATE TABLE IF NOT EXISTS tag (tag_id VARCHAR(5) PRIMARY KEY, tag_name VARCHAR(15));");
-    query.exec("CREATE TABLE IF NOT EXISTS note_tag (tag_id INTEGER, note_id INTEGER, tag_value VARCHAR(20), tag_state INTEGER;");
+    query.exec("CREATE TABLE IF NOT EXISTS note_tag (note_id INTEGER, tag_id VARCHAR(5), tag_state INTEGER, tag_param VARCHAR(20));");
 }
-
-void DatabaseCreator::fillTag() {
-    QSqlQuery query(database);
-
-    QStringList tags;
-    tags << "NEW";
-
-    foreach(QString tag, tags) {
-        query.exec("select tag_id from tag where tag_id = '" + tag + "'");
-        if (! query.next()) {
-            query.exec("insert into tag (tag_id) VALUES ('" + tag + "');");
-        }
-    }
-}
-

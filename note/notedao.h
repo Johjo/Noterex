@@ -1,16 +1,20 @@
 #ifndef NOTEDAO_H
 #define NOTEDAO_H
 
+#include <QObject>
+
 #include "note.h"
 
 #include "notedistributor.h"
+#include "tag.h"
 
 class NoteDistributor;
 
-class NoteDAO
+class NoteDAO : public QObject
 {
+    Q_OBJECT
 public:
-    NoteDAO() {}
+    NoteDAO(QObject *parent = 0);
     virtual ~NoteDAO() {}
 
     virtual Note * create() = 0;
@@ -30,6 +34,10 @@ public:
 
     virtual NoteDistributor * getNoteDistributor() = 0;
     virtual NoteDistributor * getNoteDistributor(QString searchedText) = 0;
+    virtual NoteDistributor * getNoteDistributor(QList<Tag> tags, QString searchedText = "") = 0;
+
+signals:
+    void dataChanged();
 
 };
 

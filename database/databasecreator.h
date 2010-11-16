@@ -20,9 +20,7 @@ private:
     void openDatabaseIfNecessary();
     void createNote();
     void createIndex();
-    void createTagAndFillIt();
     void createTag();
-    void fillTag();
 
 };
 

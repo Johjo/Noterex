@@ -3,15 +3,16 @@
 
 #include <QString>
 #include <QStringList>
+#include <QList>
 
 #include "searcher.h"
+#include "note/tag.h"
 
 class StandardSearcher : public Searcher
 {
 public:
     StandardSearcher(QString table, QString searchedText, QSqlDatabase db = QSqlDatabase::database("noterex"));
-
-    virtual QList<int> getAllDocuments();
+    virtual QSet<int> getAllDocuments();
 
 protected:
     StandardSearcher();

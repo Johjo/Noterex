@@ -36,9 +36,13 @@ SOURCES += main.cpp\
     database/databasecreator.cpp \
     database/createdatabaseaction.cpp \
     database/opendatabaseaction.cpp \
-    note/tagdata.cpp \
     note/daofactorysql.cpp \
-    note/notedaosql.cpp
+    note/notedaosql.cpp \
+    note/tag.cpp \
+    gui/widget/formnotecollector.cpp \
+    gui/windows/mainwin.cpp \
+    note/tagsearcher.cpp \
+    note/notedao.cpp
 
 HEADERS  += mainwindow.h \
     noteedit.h \
@@ -71,10 +75,15 @@ HEADERS  += mainwindow.h \
     database/databasecreator.h \
     database/createdatabaseaction.h \
     database/opendatabaseaction.h \
-    note/tagdata.h \
     note/notedao.h \
     note/daofactory.h \
     note/daofactorysql.h \
-    note/notedaosql.h
+    note/notedaosql.h \
+    note/tag.h \
+    gui/widget/formnotecollector.h \
+    gui/windows/mainwin.h \
+    note/tagsearcher.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    gui/widget/formnotecollector.ui \
+    gui/windows/mainwin.ui

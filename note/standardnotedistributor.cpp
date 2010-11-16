@@ -9,8 +9,7 @@ StandardNoteDistributor::StandardNoteDistributor(NoteDAO *noteDAO, QSqlDatabase 
         model(new QSqlQueryModel()),
         numberOfRows(0),
         noteDAO(noteDAO)
-{
-}
+{}
 
 
 StandardNoteDistributor::~StandardNoteDistributor() {
@@ -23,6 +22,8 @@ void StandardNoteDistributor::refresh() {
         model->fetchMore();
     }
     numberOfRows = model->rowCount();
+
+    emit dataChanged();
 }
 
 int StandardNoteDistributor::count() const{

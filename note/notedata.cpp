@@ -31,5 +31,14 @@ QString NoteData::getKeywords() const{
     return keywords;
 }
 
+QList<Tag> NoteData::getTags() {
+    return tags;
+}
 
+void NoteData::resetTags() {
+    tags.clear();
+}
 
+void NoteData::addTag(Tag tag) {
+    tags.append(tag);
+}

@@ -5,6 +5,8 @@
 #include <QSharedData>
 #include <QSharedPointer>
 
+#include "tag.h"
+
 
 class NoteData : public QSharedData
 {
@@ -21,10 +23,17 @@ public:
     void setBody(QString);
     void setKeywords(QString);
 
+    QList<Tag> getTags();
+    void resetTags();
+    void addTag(Tag);
+
+
 private:
     QString subject;
     QString body;
     QString keywords;
+
+    QList<Tag> tags;
 
 };
 

@@ -17,10 +17,9 @@ StandardSearcher::StandardSearcher():
 StandardSearcher::StandardSearcher(QString table, QString searchedText, QSqlDatabase db):
         Searcher(table, searchedText),
         database(db)
-{
-}
+{}
 
-QList<int> StandardSearcher::getAllDocuments() {
+QSet<int> StandardSearcher::getAllDocuments() {
     QList<int> wordsId = getWordsId(Tokenizer().prepare(getSearchedText()));
 
     QSqlQuery query(database);
@@ -51,7 +50,7 @@ QList<int> StandardSearcher::getAllDocuments() {
         }
     }
 
-    return documentsId.toList();
+    return documentsId;
 }
 
 QList<int> StandardSearcher::getWordsId(QStringList words) {

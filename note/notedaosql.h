@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 
 #include "notedao.h"
+#include "tag.h"
 
 class NoteDAOSql : public NoteDAO
 {
@@ -21,11 +22,14 @@ public:
 
     virtual NoteDistributor * getNoteDistributor();
     virtual NoteDistributor * getNoteDistributor(QString searchedText);
-
+    virtual NoteDistributor * getNoteDistributor(QList<Tag> tags, QString searchedText = "");
 
 private:
     QSqlDatabase database;
 
+    void getTagsForNote(NoteData *, int id);
+    void saveTagsForNote(NoteData *, int id);
+    void removeTagsForNote(int id);
 };
 
 #endif // NOTEDAOSQL_H

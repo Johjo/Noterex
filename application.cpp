@@ -6,6 +6,7 @@
 
 #include "mainwindow.h"
 #include "note/daofactorysql.h"
+#include "gui/windows/mainwin.h"
 
 
 Application * Application::application = NULL;
@@ -27,10 +28,15 @@ int Application::run(int argc, char *argv[]) {
     readSettings();
     openLastDatabaseOrCreateIt();
 
+    QMainWindow * win;
 
-    MainWindow w;
-    w.show();
+    if (argc >= 2) {
+        win = new MainWin();
+    } else {
+        win = new MainWindow();
+    }
 
+    win->show();
     return a.exec();
 }
 
