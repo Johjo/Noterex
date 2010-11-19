@@ -7,6 +7,7 @@
 #include "note/notedistributor.h"
 #include "note/notedao.h"
 #include "note/note.h"
+#include "note/notegui.h"
 
 namespace Ui {
     class formNoteCollector;
@@ -21,20 +22,24 @@ public:
     ~FormNoteCollector();
 
 public slots:
-    void createNote();
+    void slotCreateNote();
+    void slotBodyChanged();
+
     void removeNote();
 
-    void noteChanged();
-    void noteSelected(QModelIndex);
+    void slotNoteSelected(QModelIndex);
 
 private:
     Ui::formNoteCollector *ui;
     NoteDAO * noteDAO;
     NoteDistributor * distributor;
 
+    NoteGUI * noteGui;
+
     void createNoteDistributor();
-    Note * note;
     bool eventFilter(QObject *, QEvent *);
+    Note * createNote();
+    void createNoteGui(Note * note);
 
 };
 

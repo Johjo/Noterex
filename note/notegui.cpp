@@ -11,27 +11,45 @@ NoteGUI::~NoteGUI() {
 }
 
 QString NoteGUI::getSubject() {
-    return note->getSubject();
+    if (note == 0) {
+        return "";
+    } else {
+        return note->getSubject();
+    }
 }
 
 QString NoteGUI::getBody() {
-    return note->getBody();
+    if (note == 0) {
+        return "";
+    } else {
+        return note->getBody();
+    }
 }
 
 QString NoteGUI::getKeywords() {
-    return note->getKeywords();
+    if (note == 0) {
+        return "";
+    } else {
+        return note->getKeywords();
+    }
 }
 
 void NoteGUI::setSubject(QString subject) {
-    note->setSubject(subject);
+    if (note != 0) {
+        note->setSubject(subject);
+    }
 }
 
 void NoteGUI::setBody(QString body) {
-    note->setBody(body);
+    if (note != 0) {
+        note->setBody(body);
+    }
 }
 
 void NoteGUI::setKeywords(QString keywords) {
-    note->setKeywords(keywords);
+    if (note != 0) {
+        note->setKeywords(keywords);
+    }
 }
 
 bool NoteGUI::isEdited() {
@@ -39,13 +57,16 @@ bool NoteGUI::isEdited() {
 }
 
 void NoteGUI::save() {
-    if (isUpdated) {
+    if (isUpdated && note != 0) {
         note->save();
+        isUpdated = false;
     }
 }
 
 void NoteGUI::remove() {
-    note->remove();
+    if (note != 0) {
+        note->remove();
+    }
 }
 
 void NoteGUI::noteChanged() {

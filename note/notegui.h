@@ -18,10 +18,6 @@ public:
     QString getBody();
     QString getKeywords();
 
-    void setSubject(QString subject);
-    void setBody(QString body);
-    void setKeywords(QString keywords);
-
     bool isEdited();
 
     Mode getMode();
@@ -37,6 +33,10 @@ public slots:
     void noteChanged();
     void save();
     void remove();
+
+    void setSubject(QString subject);
+    void setBody(QString body);
+    void setKeywords(QString keywords);
 };
 
 #endif // NOTEGUI_H

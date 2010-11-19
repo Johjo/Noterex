@@ -5,26 +5,26 @@
 #include "model/noteviewmodel.h"
 
 #include "note/standardnotedistributor.h"
-
+#include "note/note.h"
 
 
 FormNoteCollector::FormNoteCollector(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::formNoteCollector),
-    noteDAO(Application::getApplication()->getNoteDAO()),
-    note(NULL)
+        QWidget(parent),
+        ui(new Ui::formNoteCollector),
+        noteDAO(Application::getApplication()->getNoteDAO()),
+        noteGui(new NoteGUI())
 {
     createNoteDistributor();
 
     ui->setupUi(this);
     ui->noteView->setModel(new NoteViewModel(distributor, ui->noteView));
 
-    connect(ui->newButton,SIGNAL(clicked()),this,SLOT(createNote()));
+    connect(ui->newButton,SIGNAL(clicked()),this,SLOT(slotCreateNote()));
     connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeNote()));
 
+    connect(ui->noteView->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotNoteSelected(QModelIndex)));
+    connect(ui->bodyEdit,SIGNAL(textChanged()),this,SLOT(slotBodyChanged()));
 
-    connect(ui->subjectEdit,SIGNAL(editingFinished()),this,SLOT(noteChanged()));
-    connect(ui->noteView->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(noteSelected(QModelIndex)));
     ui->bodyEdit->installEventFilter(this);
 }
 
@@ -44,39 +44,60 @@ void FormNoteCollector::createNoteDistributor() {
     distributor = noteDAO->getNoteDistributor(tags);
 }
 
-void FormNoteCollector::createNote() {
-    note = noteDAO->create();
-    note->setSubject(tr("New note"));
+void FormNoteCollector::slotCreateNote(){
+    noteGui->save();
 
+    createNoteGui(createNote());
+
+    ui->subjectEdit->setFocus(Qt::OtherFocusReason);
+    ui->subjectEdit->selectAll();
+}
+
+void FormNoteCollector::createNoteGui(Note *note) {
+    delete noteGui;
+    noteGui = new NoteGUI(note,this);
+
+    ui->subjectEdit->setText(noteGui->getSubject());
+    ui->bodyEdit->setPlainText(noteGui->getSubject());
+
+    connect(ui->subjectEdit,SIGNAL(textEdited(QString)),noteGui,SLOT(noteChanged()));
+    connect(ui->bodyEdit,SIGNAL(textChanged()),noteGui,SLOT(noteChanged()));
+
+    connect(ui->subjectEdit,SIGNAL(textChanged(QString)),noteGui,SLOT(setSubject(QString)));
+
+    connect(ui->subjectEdit,SIGNAL(editingFinished()),noteGui,SLOT(save()));
+    connect(ui->subjectEdit,SIGNAL(editingFinished()),noteGui,SLOT(save()));
+}
+
+Note * FormNoteCollector::createNote() {
+    Note * note = noteDAO->create();
+    note->setSubject(tr("New note"));
     note->addTag(Tag("NEW"));
-    note->save();
+
+    return note;
 }
 
 void FormNoteCollector::removeNote() {
-    note->remove();
-}
-
-void FormNoteCollector::noteChanged() {
-    note->setSubject(ui->subjectEdit->text());
-    note->setBody(ui->bodyEdit->toPlainText());
-    note->save();
+    distributor->getNoteFromRow(ui->noteView->selectionModel()->currentIndex().row())->remove();
 }
 
 bool FormNoteCollector::eventFilter(QObject * object, QEvent * event) {
     if ((object == ui->bodyEdit)) {
         if (event->type() == QEvent::FocusOut) {
-            noteChanged();
+            noteGui->save();
             return true;
         }
     }
-
     return false;
 }
 
-void FormNoteCollector::noteSelected(QModelIndex index) {
-    delete note;
-    note = distributor->getNoteFromRow(index.row());
+void FormNoteCollector::slotNoteSelected(QModelIndex index) {
+    createNoteGui(distributor->getNoteFromRow(index.row()));
 
-    ui->subjectEdit->setText(note->getSubject());
-    ui->bodyEdit->setPlainText(note->getBody());
+    ui->subjectEdit->setText(noteGui->getSubject());
+    ui->bodyEdit->setPlainText(noteGui->getBody());
+}
+
+void FormNoteCollector::slotBodyChanged() {
+    noteGui->setBody(ui->bodyEdit->toPlainText());
 }
